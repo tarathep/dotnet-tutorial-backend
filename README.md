@@ -42,7 +42,7 @@ dotnet add ./XUnit.Tests/XUnit.Tests.csproj reference .\Tutorial.Api\Tutorial.Ap
 ## Run
 
 ```ps
-dotnet run
+dotnet run --project ./Tutorial.Api/
 ```
 
 https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run#examples
@@ -78,7 +78,7 @@ more : https://www.nuget.org/packages/ReportGenerator
 ## Run report HTML
 
 ```ps
-reportgenerator -reports:"XUnit.Tests\TestResults\*\coverage.cobertura.xml" -targetdir:"../coveragereport" -reporttypes:Html
+reportgenerator -reports:"XUnit.Tests\TestResults\*\coverage.cobertura.xml" -targetdir:"./coveragereport" -reporttypes:Html
 ```
 
 ## Configurations on File or Overide Environment variables

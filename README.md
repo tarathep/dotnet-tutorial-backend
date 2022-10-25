@@ -45,6 +45,10 @@ dotnet add ./XUnit.Tests/XUnit.Tests.csproj reference .\Tutorial.Api\Tutorial.Ap
 dotnet run --project ./Tutorial.Api/
 ```
 
+Swagger : https://localhost:7272/swagger
+
+Application : https://localhost:7272/x
+
 https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run#examples
 
 ## Build

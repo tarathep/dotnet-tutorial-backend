@@ -1,5 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Health probe
+builder.Services.AddHealthChecks();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -8,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/healthz");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,5 +26,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

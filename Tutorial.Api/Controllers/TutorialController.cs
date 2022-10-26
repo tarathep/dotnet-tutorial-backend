@@ -1,69 +1,93 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Tutorial.Api.Models;
+using Tutorial.Api.Services;
 
 namespace Tutorial.Api.Controllers
 {
-    [Route("tutorials")]
+    [Route("api/tutorials")]
     [ApiController]
     public class TutorialController : ControllerBase
     {
-        //GET : /api/tutorials
-        // [{"id":"602aa1e04f3b51804eca6917","title":"yy","description":"xx Description","published":false,"createdAt":"0001-01-01T00:00:00Z","updatedAt":"0001-01-01T00:00:00Z"},{"id":"602aa1e04f3b51804eca6917","title":"yy","description":"xx Description","published":false,"createdAt":"0001-01-01T00:00:00Z","updatedAt":"0001-01-01T00:00:00Z"}]
+        private readonly TutorialService _tutorialService;
+
+        public TutorialController(TutorialService tutorialService)
+        {
+            _tutorialService = tutorialService;
+        }
+
         [HttpGet]
-        public IEnumerable<Tutorial> Get()
+        public async Task<List<Models.Tutorial>> Get([FromQuery(Name = "title")] string? title)
         {
-            return Enumerable.Range(1, 2).Select(index => new Tutorial { id = "602aa1e04f3b51804eca6917", title = "yy", description = "xx Description", published = false, createdAt = new DateTime(), updatedAt = new DateTime() }).ToArray();
+           // . . .
 
-        }
-
-        //GET : /api/tutorials/602aa1e04f3b51804eca6917
-        [HttpGet("{id}")]
-        public ActionResult GetTutorialById(int id)
-        {
-            return Ok(new { id = "602aa1e04f3b51804eca6917", title = "yy", description = "xx Description", published = false, createdAt = "0001-01-01T00:00:00Z", updatedAt = "0001-01-01T00:00:00Z" });
+            return await _tutorialService.GetAsync();
         }
 
 
-        public class TutorialAdd
+        [HttpGet("{id:length(24)}")]
+        public async Task<ActionResult<Models.Tutorial>> GetTutorialById(string id)
         {
-            public string title { get; set; }
-            public string description { get; set; }
+            var tutorial = await _tutorialService.GetAsync(id);
+
+            if (tutorial is null) return NotFound();
+            
+            return tutorial;
         }
 
         [HttpPost]
-        public ActionResult AddTutorial([FromBody] TutorialAdd tutorial) // FromBody and FromForm
+        public async Task<IActionResult> AddTutorial([FromBody] Models.Tutorial tutorial)
         {
-            return Ok(new { code=200 , message = "Inserted a single document Success"});
+            await _tutorialService.CreateAsync(tutorial);
+
+            return Ok(new { code="200" , message = "Inserted a single document Success"});
+            
         }
 
-        [HttpPut("{id}")] 
-        public ActionResult UpdateTutorialById(string id, [FromBody] Tutorial tutorial)
+        [HttpPut("{id:length(24)}")]
+        public async Task<IActionResult> UpdateTutorial(string id,[FromBody] Models.Tutorial tutorial)
         {
+            var _tutorial = await _tutorialService.GetAsync(id);
 
-            if (id.Equals(tutorial.id))
+            if (_tutorial is null)
             {
-                return BadRequest();
+                return NotFound(new { });
             }
 
-            return Ok(tutorial);
+            tutorial.Id = _tutorial.Id;
+
+            await _tutorialService.UpdateAsync(id, tutorial);
+
+            return Ok(new { code = "200", message = "Updated a single document Success" });
         }
 
         [HttpDelete]
-        public ActionResult DeleteAll()
+        public async Task<IActionResult> DeleteAll()
         {
+            await _tutorialService.RemoveAsync();
+
             return Ok(new { code="200", message="All deleted" });
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult DeleteById(string id)
+        [HttpDelete("{id:length(24)}")]
+        public async Task<IActionResult> DeleteById(string id)
         {
-            if (id != "?")
+            var tutorial = await _tutorialService.GetAsync(id);
+
+            if (tutorial is null)
             {
                 return NotFound();
             }
-            return NoContent();
+
+            await _tutorialService.RemoveAsync(id);
+
+            return Ok(new { code = "200", message = "Deleted id "+id });
+
         }
     }
 }

@@ -1,16 +1,40 @@
+using Tutorial.Api.Models;
+using Tutorial.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Health probe
-builder.Services.AddHealthChecks();
+//CORS : https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+                      });
+});
+
 
 // Add services to the container.
+
+// add mapping config json to objects
+builder.Services.Configure<TutorialDatabaseSettings>(builder.Configuration.GetSection("TutorialDatabase"));
+
+builder.Services.AddSingleton<TutorialService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// Health probe
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
+
+app.UseRouting();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapHealthChecks("/healthz");
 

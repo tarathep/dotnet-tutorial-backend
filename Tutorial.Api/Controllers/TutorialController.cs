@@ -24,9 +24,10 @@ namespace Tutorial.Api.Controllers
         [HttpGet]
         public async Task<List<Models.Tutorial>> Get([FromQuery(Name = "title")] string? title)
         {
-           // . . .
+            if (title == null)
+                return await _tutorialService.GetAsync();
 
-            return await _tutorialService.GetAsync();
+            return await _tutorialService.GetAyncByTitle(title);
         }
 
 

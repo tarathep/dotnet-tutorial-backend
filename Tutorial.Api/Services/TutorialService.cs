@@ -20,6 +20,11 @@ namespace Tutorial.Api.Services
         public async Task<List<Models.Tutorial>> GetAsync() =>
             await _tutorialCollection.Find(_ => true).ToListAsync();
 
+        public async Task<List<Models.Tutorial>> GetAyncByTitle(string title)
+        {
+            return await _tutorialCollection.Find(x => x.Title == title).ToListAsync();
+        }
+
         public async Task<Models.Tutorial?> GetAsync(string id) =>
             await _tutorialCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 

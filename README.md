@@ -39,6 +39,27 @@ Add reference project into xunit project
 dotnet add ./XUnit.Tests/XUnit.Tests.csproj reference .\Tutorial.Api\Tutorial.Api.csproj
 ```
 
+## MongoDB with Mongoshell
+
+```sh
+Install mongo-shell
+https://www.mongodb.com/docs/mongodb-shell/install/
+
+> mongod --dbpath <data_directory_path>
+
+> show dbs
+
+> use tutorialdb
+
+> db.createCollection('tutorials')
+
+> db.tutorials.insertMany([{ "title": "Design Patterns", "description": "", "published": false}])
+
+> db.tutorials.find().pretty()
+
+```
+
+
 ## Run
 
 ```ps

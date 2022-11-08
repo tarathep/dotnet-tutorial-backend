@@ -14,12 +14,16 @@ namespace Tutorial.Api.Controllers
     [ApiController]
     public class TutorialController : ControllerBase
     {
-        private readonly TutorialService _tutorialService;
+        #region Property
+        private readonly ITutorialService _tutorialService;
+        #endregion
 
-        public TutorialController(TutorialService tutorialService)
+        #region Constructor
+        public TutorialController(ITutorialService tutorialService)
         {
             _tutorialService = tutorialService;
         }
+        #endregion
 
         [HttpGet]
         public async Task<List<Models.Tutorial>> Get([FromQuery(Name = "title")] string? title)
@@ -32,11 +36,9 @@ namespace Tutorial.Api.Controllers
 
 
         [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<Models.Tutorial>> GetTutorialById(string id)
+        public async Task<Models.Tutorial> GetTutorialById(string id)
         {
             var tutorial = await _tutorialService.GetAsync(id);
-
-            if (tutorial is null) return NotFound();
             
             return tutorial;
         }
@@ -45,7 +47,7 @@ namespace Tutorial.Api.Controllers
         public async Task<IActionResult> AddTutorial([FromBody] Models.Tutorial tutorial)
         {
             await _tutorialService.CreateAsync(tutorial);
-
+            
             return Ok(new { code="200" , message = "Inserted a single document Success"});
             
         }

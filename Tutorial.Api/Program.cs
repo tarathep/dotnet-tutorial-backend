@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
 // add mapping config json to objects
 builder.Services.Configure<TutorialDatabaseSettings>(builder.Configuration.GetSection("TutorialDatabase"));
 
-builder.Services.AddSingleton<TutorialService>();
+builder.Services.AddSingleton<ITutorialService,TutorialService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

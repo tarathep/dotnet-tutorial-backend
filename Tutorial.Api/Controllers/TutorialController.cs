@@ -26,29 +26,25 @@ namespace Tutorial.Api.Controllers
         #endregion
 
         [HttpGet]
-        public async Task<List<Models.Tutorial>> Get([FromQuery(Name = "title")] string? title)
+        public async Task<IActionResult> Get([FromQuery(Name = "title")] string? title)
         {
             if (title == null)
-                return await _tutorialService.GetAsync();
+                return Ok(await _tutorialService.GetAsync());
 
-            return await _tutorialService.GetAyncByTitle(title);
+            return Ok(await _tutorialService.GetAyncByTitle(title));
         }
 
-
         [HttpGet("{id:length(24)}")]
-        public async Task<Models.Tutorial> GetTutorialById(string id)
-        {
-            var tutorial = await _tutorialService.GetAsync(id);
-            
-            return tutorial;
+        public async Task<IActionResult> GetTutorialById(string id)
+        { 
+            return Ok(await _tutorialService.GetAsync(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddTutorial([FromBody] Models.Tutorial tutorial)
         {
             await _tutorialService.CreateAsync(tutorial);
-            
-            return Ok(new { code="200" , message = "Inserted a single document Success"});
+            return Ok(new ReturnMessage { Code="200" , Message = "Inserted a single document Success"});
             
         }
 
@@ -59,14 +55,14 @@ namespace Tutorial.Api.Controllers
 
             if (_tutorial is null)
             {
-                return NotFound(new { });
+                return NotFound();
             }
 
             tutorial.Id = _tutorial.Id;
 
             await _tutorialService.UpdateAsync(id, tutorial);
 
-            return Ok(new { code = "200", message = "Updated a single document Success" });
+            return Ok(new ReturnMessage { Code = "200", Message = "Updated a single document Success" });
         }
 
         [HttpDelete]
@@ -74,7 +70,7 @@ namespace Tutorial.Api.Controllers
         {
             await _tutorialService.RemoveAsync();
 
-            return Ok(new { code="200", message="All deleted" });
+            return Ok(new ReturnMessage { Code="200", Message="All deleted" });
         }
 
         [HttpDelete("{id:length(24)}")]
@@ -89,7 +85,7 @@ namespace Tutorial.Api.Controllers
 
             await _tutorialService.RemoveAsync(id);
 
-            return Ok(new { code = "200", message = "Deleted id "+id });
+            return Ok(new ReturnMessage{ Code = "200", Message = "Deleted id "+id });
 
         }
     }

@@ -9,19 +9,21 @@ namespace XUnit.Tests
 {
     public class TutorialControllerTests
     {
-        [Fact]
-        public async Task Get_ReturnTutorials()
+        [Theory(DisplayName = "Get search by title return tutorials")]
+        [InlineData(null)]
+        [InlineData("Hello")]
+        public async Task Get_ReturnTutorials(string value)
         {
             //  Arranage
-            string queryTitle = "Hello";
+            string queryTitle = value;
             string id = "63730beabd3cb05f2331be45";
             string title = "Hello";
             string description = "xxx";
             bool published = true;
 
-            List<Tutorial.Api.Models.Tutorial> torialList = new List<Tutorial.Api.Models.Tutorial>();
+            List<Tutorial.Api.Models.Tutorial> tutorials = new List<Tutorial.Api.Models.Tutorial>();
             
-            torialList.Add(new Tutorial.Api.Models.Tutorial{
+            tutorials.Add(new Tutorial.Api.Models.Tutorial{
                 Id = "63730beabd3cb05f2331be45",
                 Title = "Hello",
                 Description = "xxx",
@@ -30,8 +32,8 @@ namespace XUnit.Tests
 
             var mockService = new Mock<ITutorialService>();
             // mock service GetAsync
-            mockService.Setup(service => service.GetAsync()).ReturnsAsync(torialList);
-            mockService.Setup(service => service.GetAyncByTitle(queryTitle)).ReturnsAsync(torialList);
+            mockService.Setup(service => service.GetAsync()).ReturnsAsync(tutorials);
+            mockService.Setup(service => service.GetAyncByTitle(queryTitle)).ReturnsAsync(tutorials);
 
             var controller = new TutorialController(mockService.Object);
 

@@ -236,3 +236,7 @@ _Pvt_Extensions
 
 # VSCODE
 .vscode
+
+
+appsettings.json
+appsettings.Development.json

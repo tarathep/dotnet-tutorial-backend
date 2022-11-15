@@ -6,6 +6,9 @@ ASP.NET is an open source web framework, created by Microsoft, for building mode
 
 more : https://dotnet.microsoft.com/en-us/learn/aspnet/what-is-aspnet
 
+<img src="https://dotnet.microsoft.com/static/images/illustrations/swimlane-docker-three-platforms.svg?v=kcvcmmA1iaNdOyvKzlUHIC7FzTy4bQ0cgjM95HVqoaM">
+
+
 ## Init Project
 
 Create solution project
@@ -59,7 +62,6 @@ https://www.mongodb.com/docs/mongodb-shell/install/
 
 ```
 
-
 ## Run
 
 ```ps
@@ -68,9 +70,113 @@ dotnet run --project ./Tutorial.Api/
 
 Swagger : https://localhost:7272/swagger
 
-Application : https://localhost:7272/x
+<img src="./img/dotnet-swagger.png">
 
 https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run#examples
+
+- GET /api/tutorials
+
+    Response
+
+    ```json
+    [
+        {
+            "id": "63730beabd3cb05f2331be45",
+            "title": "hello",
+            "description": "world",
+            "published": null,
+            "createdAt": "0001-01-01T00:00:00Z",
+            "updatedAt": "0001-01-01T00:00:00Z"
+        },
+        {
+            "id": "63732124796b18bc753e9157",
+            "title": "dotnet",
+            "description": "microsoft",
+            "published": null,
+            "createdAt": "0001-01-01T00:00:00Z",
+            "updatedAt": "0001-01-01T00:00:00Z"
+        }
+    ]
+    ```
+
+- GET /api/tutorials/{id}
+
+    Response
+
+    ```json
+    {
+        "id": "63730beabd3cb05f2331be45",
+        "title": "hello",
+        "description": "world",
+        "published": null,
+        "createdAt": "0001-01-01T00:00:00Z",
+        "updatedAt": "0001-01-01T00:00:00Z"
+    }
+    ```
+
+- POST /api/tutorials
+
+    Request Body
+
+    ```json
+    {
+        "title": "string",
+        "description": "string",
+    }
+    ```
+
+    Response Body
+
+    ```json
+    {
+        "code": "200",
+        "message": "Inserted a single document Success"
+    }
+    ```
+
+- DELETE /api/tutorials
+
+    Response Body
+
+    ```json
+    {
+        "code": "200",
+        "message": "All deleted"
+    }
+    ```
+
+- DELETE /api/tutorials/{id}
+
+    Response Body
+
+    ```json
+    {
+        "code": "200",
+        "message": "Deleted id 63730beabd3cb05f2331be45"
+    }
+    ```
+
+- PUT /api/tutorials/{id}
+
+    Request Body
+
+    ```json
+        {
+        "id": "63730beabd3cb05f2331be45",
+        "title": "hello",
+        "description": "world",
+        "published": true
+        }
+    ```
+
+    Response Body
+
+    ```json
+    {
+        "code": "200",
+        "message": "Deleted id 63730beabd3cb05f2331be45"
+    }
+    ```
 
 ## Build
 

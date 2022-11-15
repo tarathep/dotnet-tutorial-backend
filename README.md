@@ -184,6 +184,18 @@ https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run#examples
 dotnet build
 ```
 
+Restore as distinct layers
+
+```ps
+dotnet restore
+```
+
+Build and publish a release
+
+```ps
+dotnet publish -c Release -o out
+```
+
 ## Unit Tests
 
 Run Coverage
@@ -212,5 +224,12 @@ more : https://www.nuget.org/packages/ReportGenerator
 reportgenerator -reports:"XUnit.Tests\TestResults\*\coverage.cobertura.xml" -targetdir:"./coveragereport" -reporttypes:Html
 ```
 
-## Configurations on File or Overide Environment variables
+## Configurations
 
+Environment variables
+
+|Env Name|Value|
+|---|---|
+|TutorialDatabase__ConnectionString|mongodb://xxxxxxxx|
+|TutorialDatabase__DatabaseName|tutorialdb|
+|TutorialDatabase__TutorialCollectionName|tutorials|

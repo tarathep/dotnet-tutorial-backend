@@ -24,6 +24,10 @@ builder.Services.Configure<TutorialDatabaseSettings>(builder.Configuration.GetSe
 builder.Services.AddSingleton<ITutorialService,TutorialService>();
 
 builder.Services.AddControllers();
+
+// The following line enables Application Insights telemetry collection.
+builder.Services.AddApplicationInsightsTelemetry();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,11 +43,14 @@ app.UseCors(MyAllowSpecificOrigins);
 app.MapHealthChecks("/healthz");
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

@@ -4,6 +4,7 @@ using Tutorial.Api.Services;
 using Moq;
 using Tutorial.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace XUnit.Tests
 {
@@ -30,12 +31,15 @@ namespace XUnit.Tests
                 Published = true,
             });
 
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-            // mock service GetAsync
             mockService.Setup(service => service.GetAsync()).ReturnsAsync(tutorials);
             mockService.Setup(service => service.GetAyncByTitle(queryTitle)).ReturnsAsync(tutorials);
 
-            var controller = new TutorialController(mockService.Object);
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
+        
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             var result = await controller.Get(queryTitle);
@@ -67,11 +71,14 @@ namespace XUnit.Tests
                 Published = true
             };
 
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-            // mock service GetAsync
             mockService.Setup(service => service.GetAsync(id)).ReturnsAsync(tutorial);
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
 
-            var controller = new TutorialController(mockService.Object);
+
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             var result = await controller.GetTutorialById(id);
@@ -96,11 +103,14 @@ namespace XUnit.Tests
                 Description = "xxx"
             };
 
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-           
             mockService.Setup(service => service.CreateAsync(tutorial));
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
 
-            var controller = new TutorialController(mockService.Object);
+
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             IActionResult result = await controller.AddTutorial(tutorial);
@@ -130,12 +140,15 @@ namespace XUnit.Tests
                 Published = true,
             };
 
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-            
             mockService.Setup(service => service.GetAsync(id)).ReturnsAsync(tutorial);
             mockService.Setup(service => service.UpdateAsync(id,tutorial));
 
-            var controller = new TutorialController(mockService.Object);
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
+
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             IActionResult result = await controller.UpdateTutorial(id,tutorial);
@@ -165,12 +178,15 @@ namespace XUnit.Tests
                 Published = true,
             };
 
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-            
             mockService.Setup(service => service.GetAsync(id));
             mockService.Setup(service => service.UpdateAsync(id,tutorial));
 
-            var controller = new TutorialController(mockService.Object);
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
+
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             IActionResult result = await controller.UpdateTutorial(id,tutorial);
@@ -183,11 +199,14 @@ namespace XUnit.Tests
         public async Task DeleteAll_ReturnSuccess()
         {
             //  Arranage
+
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-
             mockService.Setup(service => service.RemoveAsync());
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
 
-            var controller = new TutorialController(mockService.Object);
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             var result = await controller.DeleteAll();
@@ -217,12 +236,15 @@ namespace XUnit.Tests
                 Published = true,
             };
 
+            //MOCK SERVICE
             var mockService = new Mock<ITutorialService>();
-            
             mockService.Setup(service => service.GetAsync(id)).ReturnsAsync(tutorial);
             mockService.Setup(service => service.RemoveAsync(id));
 
-            var controller = new TutorialController(mockService.Object);
+            //MOCK LOGGER
+            var mockLogger = new Mock<ILogger<TutorialController>>();
+
+            var controller = new TutorialController(mockLogger.Object,mockService.Object);
 
             // Act
             IActionResult result = await controller.DeleteById(id);

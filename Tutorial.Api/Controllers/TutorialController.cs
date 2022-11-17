@@ -16,12 +16,14 @@ namespace Tutorial.Api.Controllers
     {
         #region Property
         private readonly ITutorialService _tutorialService;
+        private readonly ILogger _logger;
         #endregion
 
         #region Constructor
-        public TutorialController(ITutorialService tutorialService)
+        public TutorialController(ILogger<TutorialController> logger,ITutorialService tutorialService)
         {
             _tutorialService = tutorialService;
+            _logger = logger;
         }
         #endregion
 
@@ -29,64 +31,112 @@ namespace Tutorial.Api.Controllers
         public async Task<IActionResult> Get([FromQuery(Name = "title")] string? title)
         {
             if (title == null)
-                return Ok(await _tutorialService.GetAsync());
+            {
+                try{
+                    var _result = await _tutorialService.GetAsync();
 
-            return Ok(await _tutorialService.GetAyncByTitle(title));
+                    _logger.LogWarning("Get all Tutorial :",_result);
+                    
+                    return Ok(_result);
+                }catch(Exception e){
+                     _logger.LogError("Get all tutotrial error : ",e.Message);
+                }
+            }
+
+            try{
+                var result = await _tutorialService.GetAyncByTitle(title);
+                _logger.LogDebug("Get all tutorial :",result);
+                return Ok(result);
+
+            }catch(Exception e){
+                _logger.LogError("Get all error : ",e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpGet("{id:length(24)}")]
         public async Task<IActionResult> GetTutorialById(string id)
         { 
-            return Ok(await _tutorialService.GetAsync(id));
+            try{
+                var result = await _tutorialService.GetAsync(id);
+                _logger.LogDebug("GetTutorialById : ",result);
+                return Ok(result);
+            }catch(Exception e){
+                _logger.LogError("GetTutorialById ERROR : ",e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddTutorial([FromBody] Models.Tutorial tutorial)
         {
-            await _tutorialService.CreateAsync(tutorial);
-            return Ok(new ReturnMessage { Code="200" , Message = "Inserted a single document Success"});
-            
+            try{
+                await _tutorialService.CreateAsync(tutorial);
+                _logger.LogDebug("AddTutorial : Done");
+                return Ok(new ReturnMessage { Code="200" , Message = "Inserted a single document Success"});
+            }catch(Exception e){
+                _logger.LogError("GetTutorialById ERROR : ",e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> UpdateTutorial(string id,[FromBody] Models.Tutorial tutorial)
         {
-            var _tutorial = await _tutorialService.GetAsync(id);
+            try{
+                var _tutorial = await _tutorialService.GetAsync(id);
+                
+                if (_tutorial is null)
+                {
+                    _logger.LogDebug("UpdateTutorial tutorial : NULL");
+                    return NotFound();
+                }
 
-            if (_tutorial is null)
-            {
-                return NotFound();
-            }
+                tutorial.Id = _tutorial.Id;
 
-            tutorial.Id = _tutorial.Id;
-
-            await _tutorialService.UpdateAsync(id, tutorial);
-
-            return Ok(new ReturnMessage { Code = "200", Message = "Updated a single document Success" });
+                await _tutorialService.UpdateAsync(id, tutorial);
+    
+                _logger.LogDebug("UpdateTutorial tutorial : Done");
+                return Ok(new ReturnMessage { Code = "200", Message = "Updated a single document Success" });
+            }catch(Exception e){
+                _logger.LogError("UpdateTutorial ERROR : ",e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }            
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteAll()
         {
-            await _tutorialService.RemoveAsync();
-
-            return Ok(new ReturnMessage { Code="200", Message="All deleted" });
+            try{
+                await _tutorialService.RemoveAsync();
+                _logger.LogDebug("DeleteAll tutorial : Done");
+                return Ok(new ReturnMessage { Code="200", Message="All deleted" });
+            }catch(Exception e){
+                _logger.LogError("DeleteAll ERROR : ",e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            
         }
 
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> DeleteById(string id)
         {
-            var tutorial = await _tutorialService.GetAsync(id);
+            try{
+                var tutorial = await _tutorialService.GetAsync(id);
 
-            if (tutorial is null)
-            {
-                return NotFound();
+                if (tutorial is null)
+                {
+                    _logger.LogDebug("DeleteById tutorial : NULL");
+                    return NotFound();
+                }
+
+                await _tutorialService.RemoveAsync(id);
+                _logger.LogDebug("DeleteById tutorial :",id);
+                return Ok(new ReturnMessage{ Code = "200", Message = "Deleted id "+id });
+            }catch(Exception e){
+                _logger.LogError("DeleteAll ERROR : ",e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            await _tutorialService.RemoveAsync(id);
-
-            return Ok(new ReturnMessage{ Code = "200", Message = "Deleted id "+id });
-
         }
     }
 }

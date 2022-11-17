@@ -8,7 +8,6 @@ more : https://dotnet.microsoft.com/en-us/learn/aspnet/what-is-aspnet
 
 <img src="https://dotnet.microsoft.com/static/images/illustrations/swimlane-docker-three-platforms.svg?v=kcvcmmA1iaNdOyvKzlUHIC7FzTy4bQ0cgjM95HVqoaM">
 
-
 ## Init Project
 
 Create solution project
@@ -23,7 +22,7 @@ Create ASP.NET Web Api project
 dotnet new webapi -o Api
 ```
 
-Create xUnit project
+Create XUnit project
 
 ```ps
 dotnet new xunit -o Xunit.Tests
@@ -42,7 +41,15 @@ Add reference project into xunit project
 dotnet add ./XUnit.Tests/XUnit.Tests.csproj reference .\Tutorial.Api\Tutorial.Api.csproj
 ```
 
-## MongoDB with Mongoshell
+## Init Database(MongoDB)
+
+Add dependency MongoDB Driver into project
+
+```ps
+dotnet add package MongoDB.Driver --version 2.18.0
+```
+
+Mongoshell
 
 ```sh
 Install mongo-shell
@@ -233,3 +240,13 @@ Environment variables
 |TutorialDatabase__ConnectionString|mongodb://xxxxxxxx|
 |TutorialDatabase__DatabaseName|tutorialdb|
 |TutorialDatabase__TutorialCollectionName|tutorials|
+
+## Logging integrate with Azure Application Insights
+
+https://learn.microsoft.com/en-us/azure/azure-monitor/app/ilogger#aspnet-core-applications
+
+Add package ApplicationInsights
+
+```ps
+dotnet add package Microsoft.ApplicationInsights.AspNetCore --version 2.21.0
+```

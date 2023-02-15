@@ -12,7 +12,7 @@ namespace Tutorial.Api.Controllers
         #endregion
 
         #region Constructor
-        public TestController(ILogger<TutorialController> logger)
+        public TestController(ILogger<TestController> logger)
         {
             _logger = logger;
         }

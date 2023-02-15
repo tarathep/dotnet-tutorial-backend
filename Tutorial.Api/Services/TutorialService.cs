@@ -38,7 +38,6 @@ namespace Tutorial.Api.Services
             await _tutorialCollection.InsertOneAsync(newTutorial);
         }
             
-
         public async Task UpdateAsync(string id, Models.Tutorial updatedTutorial) =>
             await _tutorialCollection.ReplaceOneAsync(x => x.Id == id, updatedTutorial);
 

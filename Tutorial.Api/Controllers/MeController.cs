@@ -7,6 +7,7 @@ namespace Tutorial.Api.Controllers
 {
     [Route("/")]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi=true)]
     public class MeController : ControllerBase
     {
         #region Property
